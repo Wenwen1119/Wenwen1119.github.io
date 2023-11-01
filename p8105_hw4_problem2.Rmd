@@ -1,0 +1,135 @@
+---
+title: "New York NOAA Data Flexdashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: scroll
+---
+
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE, warning = FALSE)
+library(flexdashboard)
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+library(rnoaa)
+```
+
+
+```{r, results='hide'}
+#import NOAA data
+nynoaadat <- read_csv("data/nynoaadat.csv", show_col_types = FALSE)
+#removing all rows with missing values
+nynoaadat_cleaned <- nynoaadat %>% drop_na()
+#view structure after removing missing values
+str(nynoaadat_cleaned)
+```
+
+
+```{r}
+#randomly samplling 200000 rows from the dataset
+nynoaadat_sampled <- nynoaadat_cleaned %>%
+  sample_n(200000)
+#create a monthly summary data for precipitation, maximum temperature and snow
+#extract month and year from the date
+nynoaadat_sampled <- nynoaadat_sampled %>%
+  mutate(month = as.integer(format(date, "%m")),
+         year = as.integer(format(date, "%Y")),
+         month_year = format(date, "%Y-%m"))
+#create a summary table with mean values by month and year
+summary_data_month_year <- nynoaadat_sampled %>%
+  group_by(month_year) %>%
+  summarize(mean_prcp = mean(prcp),
+            mean_tmax = mean(tmax),
+            mean_tmin = mean(tmin),
+            mean_snwd = mean(snwd))
+#create a monthly summary table
+summary_data_monthly <- nynoaadat_sampled %>%
+  group_by(month) %>%
+  summarize(mean_prcp = mean(prcp),
+            mean_tmax = mean(tmax),
+            mean_tmin = mean(tmin),
+            mean_snow = mean(snow))
+```
+
+
+
+### Precipitation histogram.
+
+```{r}
+plot_ly(data = nynoaadat_sampled,
+                          x = ~prcp, type = 'histogram',nbinsx=50) %>%
+  layout(title = "Precipitation histogram",
+         xaxis = list(title = "Precipitation (mm)"),
+         yaxis = list(title = "Frequency"))
+
+```
+        
+
+***
+The precipitation variable (measured in mm) is heavily skewed to the right, which implies the mean value for precipitation is larger than both the median and mode values.    
+
+
+
+
+### Average monthly precipitation, maximum and minimum temperatures.    
+
+```{r}
+plot_ly(data = summary_data_month_year, x = ~month_year, 
+        y = ~mean_prcp, type = 'scatter',mode = 'lines', name = "Precipitation") %>%
+  add_trace(y = ~mean_tmax, name = "Max temperature") %>%
+  add_trace(y = ~mean_tmin, name = "Min temperature") %>%
+  layout(title = "Precipitation and temperature trends by month and year",
+         xaxis = list(title = "Month"),
+         yaxis = list(title = "Mean value"),
+         showlegend = TRUE)
+```
+      
+***
+The lowest and highest temperature values as well as precpitation amounts vary year-to-year.     
+
+
+### Snowfall distribution by month.    
+
+```{r}
+plot_ly(data = summary_data_monthly, x = ~month, y = ~mean_snow, type = 'bar') %>%
+  layout(title = "Snowfall distribution by month",
+         xaxis = list(title = "Month"),
+         yaxis = list(title = "Mean snowfall (mm)"))
+```
+       
+***
+The months between October to April experience the highest amounts of snowfall.
+
+
+### Maximum temperature heatmap.  
+
+```{r}
+plot_ly(data = nynoaadat_sampled, x = ~month, y = ~year, 
+        z = ~tmax, type = 'heatmap') %>%
+  layout(title = "Maximum temperature heatmap",
+         xaxis = list(title = "Month"),
+         yaxis = list(title = "Year"))
+
+```
+     
+     
+***
+The "maximum" temperatures indicate the months between May and August as the warmest months in general which coincide with the Summer season. In particular, the Month of August in the year 2002 observed the highest "maximum", temperature at 372 (tenths of degree celcius).   
+
+### Scatter plot for maximum temperature against snow depth.   
+
+```{r}
+plot_ly(data = nynoaadat_sampled, x = ~tmax, y =~snwd, type = 'scatter') %>%
+  layout(title = "Scatter plot of maximum temperature vs snow depth",
+         xaxis = list(title ="Maximum temperature (tenths of degrees C)"),
+         yaxis = list(title = "Snow depth (mm)"))
+```
+
+
+***
+The snow is generally deeper for lower "maximum" temperatures, upto 0 degrees celcius, at which point the snow depth reduces.
