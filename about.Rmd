@@ -1,0 +1,19 @@
+---
+title: "About me"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cerulean
+---
+
+# Self-introduction
+
+I will introduce my education background and experience.
+
+## Eduation background
+I graduated with a bachelor's degree in Mathematics and Economics from New York University. Currently, I am pursuing my studies in Biostatistics at Columbia University.
+
+## Experience
+During my academic journey, I had the opportunity to intern at Merck, where I was primarily responsible for analyzing and processing data related to the launch of new vaccine mobile applications.
+
