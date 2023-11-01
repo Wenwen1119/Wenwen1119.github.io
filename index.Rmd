@@ -14,3 +14,7 @@ output:
 
 # Welcome to explore Wenwen's world
 I will introduce myself to you
+
+## Talking about myself
+
+[About me](about.html)

@@ -1,0 +1,14 @@
+name: "Yay internet!"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "About"
+      href: about.html
+    - icon: fa-envelope fa-lg
+      href: mailto:<wl2926@columbia.edu>
+    - icon: fa-github fa-lg
+      href: http://github.com/Wenwen1119/
+output:
+  html_document:
+    theme: cerulean
