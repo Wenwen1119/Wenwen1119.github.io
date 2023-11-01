@@ -131,3 +131,5 @@ plot_ly(data = nynoaadat_sampled, x = ~tmax, y =~snwd, type = 'scatter') %>%
 ***
 The snow is generally deeper for lower "maximum" temperatures, upto 0 degrees celcius, at which point the snow depth reduces.
 
+
+
