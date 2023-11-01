@@ -1,0 +1,16 @@
+---
+title: "My awesome website"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cerulean
+---
+
+# This is Wenwen's awesome website
+
+<img src="images/uni1.jpg" style="width:75%">
+
+
+# Welcome to explore Wenwen's world
+I will introduce myself to you
